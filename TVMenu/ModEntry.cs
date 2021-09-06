@@ -6,6 +6,7 @@ using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Objects;
+using StardewValley.Menus;
 
 namespace YourProjectName
 {
@@ -13,7 +14,7 @@ namespace YourProjectName
     public class ModEntry : Mod
     {
 
-        enum MenuItem { WEATHER, FORTUNE, RECIPE, TIPS, FISHINGTIP};
+        private enum MenuItem { WEATHER, FORTUNE, RECIPE, TIPS, FISHINGTIP};
 
         /*********
         ** Public methods
@@ -48,20 +49,22 @@ namespace YourProjectName
         {
             List<MenuItem> todaysItems = this.getTodaysItems();
             List<string> todaysReport = this.genTodaysReport(todaysItems);
-            
+            string msg = string.Join("^", todaysReport.ToArray());
 
-            log("Day Started hehe");
-            foreach(string s in todaysReport)
-            {
-                log(s);
-            }
-        
+            Game1.activeClickableMenu = new LetterViewerMenu(msg);
 
         }
 
         private List<string> genTodaysReport(List<MenuItem> items)
         {
             List<string> report = new List<string>();
+            report.Add($"Good Morning, {Game1.player.Name}!");
+
+            if (Game1.player.mailbox.Count > 0)
+            {
+                report.Add($"You have {Game1.player.mailbox.Count} letters");
+            }
+            report.Add("");
             TV t = new TV();
             foreach (MenuItem i in items)
             {
@@ -71,42 +74,45 @@ namespace YourProjectName
                         report.Add("Weather Forecast:");
                         string weather = this.Helper.Reflection.GetMethod(t, "getWeatherForecast").Invoke<string>();
                         report.Add(weather);
+                        report.Add("");
                         break;
                     case MenuItem.FORTUNE:
                         report.Add("Today's Luck: ");
                         string luck = this.Helper.Reflection.GetMethod(t, "getFortuneForecast").Invoke<string>(Game1.player);
                         report.Add(luck);
+                        report.Add("");
                         break;
                     case MenuItem.TIPS:
-                        report.Add("Livin' Off The Land");
+                        report.Add("Livin' Off The Land: ");
                         string tips = this.Helper.Reflection.GetMethod(t, "getTodaysTip").Invoke<string>();
                         report.Add(tips);
+                        report.Add("");
                         break;
                     case MenuItem.RECIPE:
-                        string title = "The Queen of Sauce";
+                        report.Add("The Queen of Sauce: ");
                         string[] recipe = this.Helper.Reflection.GetMethod(t, "getWeeklyRecipe").Invoke<string[]>();
                         if(recipe[1].Contains("You already know how to cook"))
                         {
                             if(recipe[1].ToLower().Contains("carp surprise"))
                             {
-                                title += ": Rerun for Carp Surprise";
+                                report.Add("Re-run for Carp Surprise");
                             }
                             else if (recipe[1].ToLower().Contains("melon"))
                             {
-                                title += ": Rerun for Melon";
+                                report.Add("Re-run for Melon");
                             }
                             else
                             {
-                                string name = recipe[0].Split('!')[0];
-                                title += $": Rerun for {name}";
+                                string[] n = recipe[0].Split('!');
+                                if(n.Length > 0) report.Add($"Re-run for {n[0]}");
                             }
-                            report.Add(title);
+                           
                         }
                         else
                         {
-                            report.Add(title);
                             report.Add(recipe[0]);
                         }
+                        report.Add("");
                         break;
                 }
             }
@@ -114,6 +120,7 @@ namespace YourProjectName
             return report;
         }
 
+        
         private List<MenuItem> getTodaysItems()
         {
             List<MenuItem> todaysItems = new List<MenuItem>();
