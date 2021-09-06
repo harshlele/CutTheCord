@@ -1,0 +1,10 @@
+﻿{
+  "Name": "TVMenu",
+  "Author": "cgifox",
+  "Version": "1.0.0",
+  "Description": "a simple mod that shows the weather,luck and any recipes right in your bed at the start of the day",
+  "UniqueID": "cgifox.TVMenu",
+  "EntryDll": "TVMenu.dll",
+  "MinimumApiVersion": "3.0.0",
+  "UpdateKeys": []
+}
