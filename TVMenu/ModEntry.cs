@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
@@ -8,7 +7,7 @@ using StardewValley;
 using StardewValley.Objects;
 using StardewValley.Menus;
 
-namespace YourProjectName
+namespace CutTheCord
 {
     /// <summary>The mod entry point.</summary>
     public class ModEntry : Mod
@@ -44,21 +43,28 @@ namespace YourProjectName
             this.Monitor.Log($"{Game1.player.Name} pressed {e.Button}.", LogLevel.Debug);
         }
 
-
+        /// <summary>Raised after the day has started.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
-            List<MenuItem> todaysItems = this.getTodaysItems();
-            List<string> todaysReport = this.genTodaysReport(todaysItems);
+            List<MenuItem> todaysItems = this.GetTodaysItems();
+            List<string> todaysReport = this.GenTodaysReport(todaysItems);
             string msg = string.Join("^", todaysReport.ToArray());
 
             Game1.activeClickableMenu = new LetterViewerMenu(msg);
 
         }
 
-        private List<string> genTodaysReport(List<MenuItem> items)
+        /// <summary>Generate the report text based on today's items</summary>
+        /// <param name="items">The items(weather forecast, fortune etc) for the day</param>
+        private List<string> GenTodaysReport(List<MenuItem> items)
         {
             List<string> report = new List<string>();
             report.Add($"Good Morning, {Game1.player.Name}!");
+
+            var date = SDate.Now();
+            report.Add(date.ToLocaleString());
 
             if (Game1.player.mailbox.Count > 0)
             {
@@ -120,8 +126,8 @@ namespace YourProjectName
             return report;
         }
 
-        
-        private List<MenuItem> getTodaysItems()
+        /// <summary>Get the items to show for the daily briefing(uses same logic as game code)</summary>
+        private List<MenuItem> GetTodaysItems()
         {
             List<MenuItem> todaysItems = new List<MenuItem>();
             todaysItems.Add(MenuItem.WEATHER);
@@ -143,7 +149,8 @@ namespace YourProjectName
             return todaysItems;
         }
 
-        private void log(String l)
+
+        private void Log(string l)
         {
             this.Monitor.Log(l, LogLevel.Debug);
         }

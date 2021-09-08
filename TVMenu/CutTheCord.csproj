@@ -7,8 +7,8 @@
     <ProjectGuid>{91FDD0E6-57F3-419E-89A9-364475780300}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TVMenu</RootNamespace>
-    <AssemblyName>TVMenu</AssemblyName>
+    <RootNamespace>CutTheCord</RootNamespace>
+    <AssemblyName>CutTheCord</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
